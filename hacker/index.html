@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<title>Hacker CMD</title>
+<link rel="icon" type="image/png" href="https://i.imgur.com/7aTZgHX.png">
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  background:#000;
+  color:#0f0;
+  font-family:monospace;
+  height:100vh;
+  overflow:hidden;
+  padding:8px;
+}
+#matrix{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  z-index:1;
+  display:none;
+}
+.console{
+  position:relative;
+  z-index:2;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+/* 版本号固定在最顶部 */
+.top-info{
+  font-size:16px;
+  line-height:1.5;
+  margin-bottom:4px;
+}
+/* 输入行固定在版本号下面，永远不动 */
+.input-line{
+  display:flex;
+  font-size:16px;
+  line-height:1.5;
+  margin-bottom:4px;
+}
+#input{
+  flex:1;
+  background:transparent;
+  border:none; outline:none;
+  color:#0f0;
+  font-family:monospace;
+  font-size:16px;
+  padding-left:4px;
+}
+/* 输出内容在输入框下面滚动 */
+.output{
+  flex:1;
+  font-size:16px;
+  line-height:1.5;
+  overflow:hidden;
+}
+</style>
+</head>
+
+<body>
+<canvas id="matrix"></canvas>
+
+<div class="console">
+  <!-- 版本号 固定最顶部 -->
+  <div class="top-info">
+Microsoft Windows [版本 10.0.19045.3803]
+(c) Microsoft Corporation. 保留所有权利。
+  </div>
+
+  <!-- 输入框 固定在版本号下面 -->
+  <div class="input-line">
+    <span>C:\Hacker&gt;</span>
+    <input id="input" autocomplete="off">
+  </div>
+
+  <!-- 输出内容在最下面 -->
+  <div class="output" id="output"></div>
+</div>
+
+<script>
+const output = document.getElementById('output');
+const input = document.getElementById('input');
+const matrix = document.getElementById('matrix');
+const ctx = matrix.getContext('2d');
+
+input.focus();
+
+input.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter') return;
+
+  const cmd = input.value.trim();
+  output.textContent += `C:\Hacker>${cmd}\n`;
+  input.value = '';
+
+  // 乱码
+  let chaos = '';
+  for(let i=0;i<60;i++){
+    chaos += String.fromCharCode(Math.random()*93+33);
+  }
+  output.textContent += chaos + '\n';
+
+  alert('错误：系统指令异常\nCMD即将关闭');
+
+  document.querySelector('.console').style.display = 'none';
+  matrix.style.display = 'block';
+  startMatrix();
+});
+
+// 代码雨
+function startMatrix(){
+  matrix.width = window.innerWidth;
+  matrix.height = window.innerHeight;
+  const cols = Math.floor(matrix.width/16);
+  const drops = Array(cols).fill(1);
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  function draw(){
+    ctx.fillStyle='rgba(0,0,0,0.08)';
+    ctx.fillRect(0,0,matrix.width,matrix.height);
+    ctx.fillStyle='#0f0';
+    ctx.font='16px monospace';
+    for(let i=0;i<drops.length;i++){
+      const t = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(t,i*16,drops[i]*16);
+      if(drops[i]*16 > matrix.height && Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+</script>
+</body>
+  </html>
