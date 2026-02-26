@@ -23,5 +23,5 @@ FFmpeg网页版转换器、Hacker CMD命令行
 
 # 快速进入
 
-[Hacker](./hacker/index.html)
-[Format Factory](./)
+[Hacker](./hacker)
+[Format Factory](./FF)
