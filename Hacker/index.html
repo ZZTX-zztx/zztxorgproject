@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no">
 <title>Hacker CMD</title>
-<link rel="icon" type="image/png" href="https://i.imgur.com/7aTZgHX.png">
+<!-- 图标：Hacker → 绿色H -->
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIGZpbGw9IiMwMDAiLz48dGV4dCB4PSI1MCIgeT0iODAiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNzAiIGZpbGw9IiMwZjAiPkI8L3RleHQ+PC9zdmc+">
 <style>
 *{
   margin:0;
@@ -87,25 +88,20 @@ const ctx = matrix.getContext('2d');
 
 input.focus();
 
-// 超强兼容全屏（手机/电脑都稳）
 function goFull() {
-  let docEl = document.documentElement;
-  if (docEl.requestFullscreen) {
-    docEl.requestFullscreen();
-  } else if (docEl.webkitRequestFullscreen) {
-    docEl.webkitRequestFullscreen();
-  } else if (docEl.msRequestFullscreen) {
-    docEl.msRequestFullscreen();
-  }
+  try {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen();
+    } else if (document.documentElement.webkitRequestFullscreen) {
+      document.documentElement.webkitRequestFullscreen();
+    }
+  } catch (e) {}
 }
 
-input.addEventListener('keydown', async (e) => {
+input.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
 
-  // 强制触发全屏
-  try {
-    goFull();
-  } catch (err) {}
+  goFull();
 
   const cmd = input.value.trim();
   output.textContent += `C:\\Hacker>${cmd}\n`;
