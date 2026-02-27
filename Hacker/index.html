@@ -33,13 +33,11 @@ body{
   display:flex;
   flex-direction:column;
 }
-/* 版本号固定在最顶部 */
 .top-info{
   font-size:16px;
   line-height:1.5;
   margin-bottom:4px;
 }
-/* 输入行固定在版本号下面，永远不动 */
 .input-line{
   display:flex;
   font-size:16px;
@@ -55,7 +53,6 @@ body{
   font-size:16px;
   padding-left:4px;
 }
-/* 输出内容在输入框下面滚动 */
 .output{
   flex:1;
   font-size:16px;
@@ -69,19 +66,16 @@ body{
 <canvas id="matrix"></canvas>
 
 <div class="console">
-  <!-- 版本号 固定最顶部 -->
   <div class="top-info">
 Microsoft Windows [版本 10.0.19045.3803]
 (c) Microsoft Corporation. 保留所有权利。
   </div>
 
-  <!-- 输入框 固定在版本号下面 -->
   <div class="input-line">
     <span>C:\Hacker&gt;</span>
     <input id="input" autocomplete="off">
   </div>
 
-  <!-- 输出内容在最下面 -->
   <div class="output" id="output"></div>
 </div>
 
@@ -93,14 +87,27 @@ const ctx = matrix.getContext('2d');
 
 input.focus();
 
+// 全屏函数
+function fullScreen() {
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    document.documentElement.webkitRequestFullscreen();
+  } else if (document.documentElement.msRequestFullscreen) {
+    document.documentElement.msRequestFullscreen();
+  }
+}
+
 input.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter') return;
+
+  // 一按回车 🔥 直接全屏！
+  fullScreen();
 
   const cmd = input.value.trim();
   output.textContent += `C:\Hacker>${cmd}\n`;
   input.value = '';
 
-  // 乱码
   let chaos = '';
   for(let i=0;i<60;i++){
     chaos += String.fromCharCode(Math.random()*93+33);
@@ -114,7 +121,6 @@ input.addEventListener('keydown', (e) => {
   startMatrix();
 });
 
-// 代码雨
 function startMatrix(){
   matrix.width = window.innerWidth;
   matrix.height = window.innerHeight;
@@ -139,4 +145,4 @@ function startMatrix(){
 }
 </script>
 </body>
-  </html>
+</html>
