@@ -87,25 +87,28 @@ const ctx = matrix.getContext('2d');
 
 input.focus();
 
-// 全屏函数
-function fullScreen() {
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen();
-  } else if (document.documentElement.webkitRequestFullscreen) {
-    document.documentElement.webkitRequestFullscreen();
-  } else if (document.documentElement.msRequestFullscreen) {
-    document.documentElement.msRequestFullscreen();
+// 超强兼容全屏（手机/电脑都稳）
+function goFull() {
+  let docEl = document.documentElement;
+  if (docEl.requestFullscreen) {
+    docEl.requestFullscreen();
+  } else if (docEl.webkitRequestFullscreen) {
+    docEl.webkitRequestFullscreen();
+  } else if (docEl.msRequestFullscreen) {
+    docEl.msRequestFullscreen();
   }
 }
 
-input.addEventListener('keydown', (e) => {
+input.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;
 
-  // 一按回车 🔥 直接全屏！
-  fullScreen();
+  // 强制触发全屏
+  try {
+    goFull();
+  } catch (err) {}
 
   const cmd = input.value.trim();
-  output.textContent += `C:\Hacker>${cmd}\n`;
+  output.textContent += `C:\\Hacker>${cmd}\n`;
   input.value = '';
 
   let chaos = '';
