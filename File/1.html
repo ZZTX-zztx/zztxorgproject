@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ZZTX的文件</title>
+        <link rel="icon" href="hacker.ico" type="image/x-icon">
+        <link rel="icon" href="hacker.png" type="image/png">
+    </head>
+    <body>
+        <div style="text-align: center; margin-top: 50px; margin-bottom: 30px;">
+            <h1 class="ai-3d-flow-text"><span>ZZTX的文件</span></h1>
+        </div>
+        <div class="container">
+            <div class="tools-container">
+                <a href="SET setup.exe" class="tool-link">声音调节器</a>
+                <a href="班刊.zip" class="tool-link">班刊项目</a>
+            </div>
+        </div>
+    <style>
+        /* 立体流动AI文字核心样式 */
+        .ai-3d-flow-text {
+            font-size: 6vw; /* 可自行调整大小，也可用px：如60px */
+            font-weight: 800;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: perspective(800px) rotateY(5deg);
+            font-family: 'Microsoft Yahei', sans-serif;
+            display: inline-block;
+        }
+
+        /* 立体底层（厚度/阴影） */
+        .ai-3d-flow-text::before {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: linear-gradient(45deg, #006677 0%, #2d3799 50%, #5a2e78 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transform: translateZ(-10px);
+            animation: fluidFlow 4s linear infinite;
+            filter: blur(1px);
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        /* 立体中层（主流动层） */
+        .ai-3d-flow-text::after {
+            content: "所有程序与应用";
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(45deg, #00f2fe 0%, #4facfe 25%, #9d4edd 50%, #fe5196 75%, #ff7a00 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fluidFlow 3s linear infinite;
+            transform: translateZ(5px);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.6),
+                         0 0 20px rgba(157, 78, 221, 0.4);
+            z-index: 1;
+        }
+
+        /* 立体顶层（高光层） */
+        .ai-3d-flow-text span {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 30%, transparent 60%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fluidFlow 3.5s linear infinite reverse;
+            opacity: 0.9;
+        }
+
+        /* 流动动画核心 */
+        @keyframes fluidFlow {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+        /* --- 容器样式 --- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+            /* --- 工具页面链接样式 --- */
+        .tool-link {
+            display: inline-block;
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 500;
+            padding: 12px 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .tool-link:hover {
+            color: #3498db;
+            border-color: #3498db;
+            background-color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+        }
+
+        .tool-link:active {
+            color: #2980b9;
+            transform: translateY(0);
+        }
+    </style>
