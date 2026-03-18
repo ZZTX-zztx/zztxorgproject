@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZZTX开发者的班刊</title>
+    <link rel="icon" href="../zztx.ico" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            touch-action: manipulation; /* 优化移动端触摸体验 */
+        }
+
+        /* 书本容器 */
+        .book-container {
+            width: 100%;
+            max-width: 800px;
+            height: 80vh;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            cursor: pointer; /* 提示可点击 */
+        }
+
+        /* 页面样式 */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform-origin: center bottom;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            z-index: 0;
+        }
+
+        /* 当前页面样式 */
+        .page.current {
+            z-index: 10;
+        }
+
+        /* 翻页动画 */
+        .page.turning {
+            transform: rotateX(180deg);
+            opacity: 0;
+        }
+
+        /* 页码指示器 */
+        .page-indicator {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* 加载提示 */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            color: #666;
+        }
+
+        /* 点击区域提示 */
+        .click-hint {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #999;
+            pointer-events: none; /* 不影响点击翻页 */
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container" id="bookContainer">
+        <div class="loading" id="loading">加载中...</div>
+        <div class="click-hint">
+            <span>← 点击左侧翻上一页</span>
+            <span>点击右侧翻下一页 →</span>
+        </div>
+    </div>
+    
+    <div class="page-indicator" id="pageIndicator">第 1 页 / 共 0 页</div>
+
+    <div class="upload-info">
+        上传日期：2026年3月18日19:00 | 上传人：梁朔光
+    </div>
+
+    <script>
+        // 配置 - 适配17张ztg格式图片
+        const bookConfig = {
+            // 图片基础路径（根据你的实际存放位置修改）
+            basePath: "./", // 如果图片和HTML同目录，用"./"；如果在pages文件夹用"./pages/"
+            // 图片格式后缀
+            ext: "ztg",
+            // 总页数 → 改为17
+            totalPages: 17,
+            // 预加载数量
+            preloadCount: 5
+        };
+
+        // 生成17张图片的路径数组
+        const generatePagePaths = () => {
+            const paths = [];
+            // 循环范围改为1到17
+            for (let i = 1; i <= bookConfig.totalPages; i++) {
+                paths.push(`${bookConfig.basePath}${i}.${bookConfig.ext}`);
+            }
+            return paths;
+        };
+
+        // 全局变量
+        let currentPageIndex = 0;
+        let pages = [];
+        let isTurning = false;
+        // 获取图片路径数组
+        const pagePaths = generatePagePaths();
+
+        // DOM元素
+        const bookContainer = document.getElementById('bookContainer');
+        const pageIndicator = document.getElementById('pageIndicator');
+        const loading = document.getElementById('loading');
+
+        // 初始化函数
+        async function initBook() {
+            try {
+                await preloadImages();
+                createPageElements();
+                updatePageIndicator();
+                loading.style.display = 'none';
+                bindEvents();
+            } catch (error) {
+                loading.textContent = '加载失败，请检查图片路径';
+                console.error('初始化失败:', error);
+            }
+        }
+
+        // 预加载图片
+        function preloadImages() {
+            return new Promise((resolve, reject) => {
+                let loadedCount = 0;
+                const totalToLoad = Math.min(bookConfig.preloadCount, pagePaths.length);
+                
+                if (totalToLoad === 0) {
+                    resolve();
+                    return;
+                }
+
+                pagePaths.slice(0, totalToLoad).forEach((src) => {
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = () => {
+                        loadedCount++;
+                        if (loadedCount === totalToLoad) resolve();
+                    };
+                    img.onerror = (err) => reject(`图片 ${src} 加载失败: ${err}`);
+                });
+            });
+        }
+
+        // 创建页面元素
+        function createPageElements() {
+            pagePaths.forEach((src, index) => {
+                const page = document.createElement('div');
+                page.className = `page ${index === 0 ? 'current' : ''}`;
+                page.style.backgroundImage = `url(${src})`;
+                page.style.display = index === 0 ? 'block' : 'none';
+                bookContainer.appendChild(page);
+                pages.push(page);
+            });
+        }
+
+        // 核心翻页函数
+        function turnPage(direction) {
+            if (isTurning) return; // 防止快速连续翻页
+            isTurning = true;
+
+            const targetIndex = direction === 'next' ? currentPageIndex + 1 : currentPageIndex - 1;
+            
+            // 边界判断（自动适配17页）
+            if (targetIndex < 0 || targetIndex >= pagePaths.length) {
+                isTurning = false;
+                return;
+            }
+
+            const currentPage = pages[currentPageIndex];
+            const targetPage = pages[targetIndex];
+
+            // 显示目标页（在当前页下方）
+            targetPage.style.display = 'block';
+            targetPage.style.zIndex = 5;
+
+            // 添加翻转动画
+            currentPage.classList.add('turning');
+
+            // 动画结束后重置状态
+            setTimeout(() => {
+                currentPage.style.display = 'none';
+                currentPage.classList.remove('current', 'turning');
+                
+                targetPage.classList.add('current');
+                targetPage.style.zIndex = 10;
+                
+                currentPageIndex = targetIndex;
+                updatePageIndicator();
+                isTurning = false;
+                preloadNextImages();
+            }, 0); // 与CSS动画时长一致
+        }
+
+        // 预加载后续图片
+        function preloadNextImages() {
+            const nextIndex = currentPageIndex + bookConfig.preloadCount;
+            if (nextIndex < pagePaths.length) {
+                const img = new Image();
+                img.src = pagePaths[nextIndex];
+            }
+        }
+
+        // 更新页码指示器（自动显示17页总数）
+        function updatePageIndicator() {
+            pageIndicator.textContent = `第 ${currentPageIndex + 1} 页 / 共 ${pagePaths.length} 页`;
+        }
+
+        // 绑定交互事件
+        function bindEvents() {
+            // 核心：点击页面左侧/右侧翻页
+            bookContainer.addEventListener('click', (e) => {
+                const containerRect = bookContainer.getBoundingClientRect();
+                const clickX = e.clientX - containerRect.left;
+                const containerWidth = containerRect.width;
+
+                // 左侧区域（左50%）→ 上一页
+                if (clickX < containerWidth * 0.5) {
+                    turnPage('prev');
+                } 
+                // 右侧区域（右50%）→ 下一页
+                else {
+                    turnPage('next');
+                }
+            });
+
+            // 键盘控制：左箭头=上一页，右箭头=下一页
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') {
+                    turnPage('prev');
+                } else if (e.key === 'ArrowRight') {
+                    turnPage('next');
+                }
+            });
+
+            // 移动端触摸滑动：右滑=上一页，左滑=下一页
+            let touchStartX = 0;
+            bookContainer.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            bookContainer.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const diffX = touchEndX - touchStartX;
+                
+                // 滑动距离大于50px才触发（防止误触）
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        turnPage('prev'); // 右滑 → 上一页
+                    } else {
+                        turnPage('next'); // 左滑 → 下一页
+                    }
+                }
+            });
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', initBook);
+    </script>
+</body>
+</html>
