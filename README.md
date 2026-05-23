@@ -27,3 +27,7 @@ FFmpeg网页版转换器、Hacker CMD命令行
 ### [Format Factory](./FF)
 ### [Class Journal](./BK)
 ### [ZetaWave File](./File)
+
+<head>
+    <meta http-equiv="refresh" content="0; url=./home">
+</head>
