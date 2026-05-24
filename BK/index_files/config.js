@@ -95,7 +95,6 @@ btnTableOfContent:["btnBookMark"]
 	normalPath : "./index_files/",
 	largePath : "./index_files/",
 	thumbPath : "./index_files/",
-	UIBaseURL : "./index_files/",
 	
 	ToolBarsSettings:"",
 	TitleBar:"",
