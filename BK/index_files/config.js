@@ -1,4 +1,4 @@
-﻿	var aliasConfig = {
+	var aliasConfig = {
 appName : ["", "", ""],
 totalPageCount : [],
 largePageWidth : [],

@@ -1,4 +1,4 @@
-﻿/* CSS Document */
+/* CSS Document */
 /* version 2020101601 */
 * {
   -webkit-box-sizing: content-box;
@@ -4528,30 +4528,34 @@ a {
   position: absolute;
   cursor: pointer;
   right: auto;
-  z-index: 10;
+  z-index: 9999;
+  display: block !important;
 }
 
 .flip_button_right{
   position: absolute;
   cursor: pointer;
   left: auto;
-  z-index: 10;
+  z-index: 9999;
+  display: block !important;
 }
 
 .flip_button_first{
   position: absolute;
   cursor: pointer;
   right: auto;
-  z-index: 10;
-  opacity : 0.2;
+  z-index: 9999;
+  opacity : 1;
+  display: block !important;
 }
 
 .flip_button_last{
   position: absolute;
   cursor: pointer;
   left: auto;
-  opacity : 0.2;
-  z-index: 10;
+  opacity : 1;
+  z-index: 9999;
+  display: block !important;
 }
 
 @-webkit-keyframes handSwipeAnimate{
