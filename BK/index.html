@@ -26,6 +26,14 @@
     <script type="text/javascript">
         var sendvisitinfo = function(type,page){};
     </script>
+    <script type="text/javascript">
+        var currentVersion = '1.0.0';
+        var storedVersion = localStorage.getItem('lastVersion');
+        if (storedVersion && storedVersion !== currentVersion) {
+            alert('！！！更新成功了！！！');
+        }
+        localStorage.setItem('lastVersion', currentVersion);
+    </script>
 </head>
 <body style="margin: 0px; padding: 0px; width: 100%; height: 100%; position: fixed;">
     <script type="text/javascript" src="./index_files/search_config.js"></script>
