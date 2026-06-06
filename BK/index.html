@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" version="XHTML+RDFa 1.0" xmlns:og="http://ogp.me/ns#" xml:lang="en" style="margin : 0;padding : 0;width : 100%;height : 100%;">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,6 +14,25 @@
     <title>班刊</title>
     <link rel="icon" href="data:">
     <link rel="stylesheet" type="text/css" href="./index_files/style.css">
+    <style>
+        .clear-cache-btn {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            z-index: 9998;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #666;
+        }
+        .clear-cache-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            color: #333;
+        }
+    </style>
     <link rel="stylesheet" type="text/css" href="./index_files/player.css">
     <link rel="stylesheet" type="text/css" href="./index_files/phoneTemplate.css">
     <link rel="stylesheet" type="text/css" href="./index_files/template.css">
@@ -132,9 +151,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAndShowUpdate();
         });
+        
+        function clearCache() {
+            localStorage.clear();
+            alert('缓存已清除！请重启程序查看更新弹窗。');
+        }
     </script>
 </head>
 <body style="margin: 0px; padding: 0px; width: 100%; height: 100%; position: fixed;">
+    <button class="clear-cache-btn" onclick="clearCache()">清除</button>
     <script type="text/javascript" src="./index_files/search_config.js"></script>
     <script type="text/javascript" src="./index_files/bookmark_config.js"></script>
     <script type="text/javascript" src="./index_files/LoadingJS.js"></script>
