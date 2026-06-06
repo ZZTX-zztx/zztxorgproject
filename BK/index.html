@@ -144,6 +144,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkAndShowUpdate();
         });
+        
+        document.addEventListener('keydown', function(e) {
+            // 禁用 F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用 Ctrl+Shift+I
+            if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用 Ctrl+Shift+J
+            if (e.ctrlKey && e.shiftKey && e.key === 'J') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用 Ctrl+Shift+C
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用 Ctrl+U (查看源代码)
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                return false;
+            }
+        });
     </script>
 </head>
 <body style="margin: 0px; padding: 0px; width: 100%; height: 100%; position: fixed;">
